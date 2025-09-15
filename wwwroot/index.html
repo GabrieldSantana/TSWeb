@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>ThingSpeak Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <h2>Temperatura & Umidade</h2>
+  <canvas id="chart" width="900" height="400"></canvas>
+
+  <script>
+    async function loadAndPlot(){
+      const r = await fetch('/api/feeds');
+      if (!r.ok) { console.error('no data'); return; }
+      const data = await r.json();
+      const feeds = data.feeds || [];
+      const labels = feeds.map(f => new Date(f.created_at).toLocaleString());
+      const temp = feeds.map(f => parseFloat(f.field2) || null);
+      const hum  = feeds.map(f => parseFloat(f.field1) || null);
+
+      const ctx = document.getElementById('chart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Temperatura', data: temp, tension: 0.3, yAxisID: 'y' },
+            { label: 'Umidade', data: hum, tension: 0.3, yAxisID: 'y1' }
+          ]
+        },
+        options: {
+          scales: {
+            y: { type: 'linear', position: 'left', title: { display: true, text: 'Temp (°C)' } },
+            y1:{ type: 'linear', position: 'right', title: { display: true, text: 'Umid (%)' }, grid: { drawOnChartArea: false } }
+          }
+        }
+      });
+    }
+    loadAndPlot();
+    setInterval(loadAndPlot, 30000);
+  </script>
+</body>
+</html>
