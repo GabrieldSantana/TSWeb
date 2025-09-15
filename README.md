@@ -1,6 +1,6 @@
 # 📊 TSWeb – Dashboard de Temperatura e Umidade via ThingSpeak
 
-Este projeto é um **dashboard em .NET 8** que consome dados da API do **ThingSpeak** (canal fornecido pela turma) e exibe em tempo real os campos:
+Este projeto é um **dashboard em .NET 8** que consome dados da API do **ThingSpeak** e exibe em tempo real os campos:
 
 - 🌡️ **Temperatura** (field2)  
 - 💧 **Umidade** (field1)  
